@@ -1,0 +1,46 @@
+# Version configuration for WS2812 LED Effects
+# This file is used for version tracking and display in web interface
+
+globals:
+  - id: app_version
+    type: std::string
+    initial_value: '"1.0.0"'
+  - id: build_date
+    type: std::string
+    initial_value: '"2026-03-08"'
+  - id: firmware_version
+    type: int
+    initial_value: '100'  # Version 1.0.0 as integer (100)
+
+text_sensor:
+  - platform: template
+    name: "Firmware Version"
+    id: firmware_version_sensor
+    lambda: |-
+      return "1.0.0";
+    update_interval: never
+
+  - platform: template
+    name: "Build Date"
+    id: build_date_sensor
+    lambda: |-
+      return "2026-03-08";
+    update_interval: never
+
+  - platform: template
+    name: "Device Info"
+    id: device_info_sensor
+    lambda: |-
+      std::string info = "WS2812 LED Effects v1.0.0";
+      return info;
+    update_interval: never
+
+# Sensor for API version tracking
+sensor:
+  - platform: template
+    name: "API Version"
+    id: api_version
+    lambda: |-
+      return 100;  # v1.0.0
+    unit_of_measurement: ""
+    update_interval: never

@@ -1,0 +1,149 @@
+esphome:
+  name: ws2812-led-effects
+  platform: ESP32
+  board: esp32dev
+  min_version: 2024.1.0
+  # Version number for tracking
+  on_boot:
+    priority: 600
+    then:
+      - logger.log:
+          format: "WS2812 LED Effects v%s started"
+          args: ["1.0.0"]
+
+# WiFi configuration
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  fast_connect: true
+  ap:
+    ssid: "ws2812-fallback"
+    password: "12345678"
+
+# Enable logging
+logger:
+  level: INFO
+  logs:
+    component: DEBUG
+
+# Enable Home Assistant integration
+api:
+  encryption:
+    key: !secret api_key
+
+# Over-the-Air Updates
+ota:
+  password: !secret ota_password
+
+# Web Server for control interface
+web_server:
+  port: 80
+  auth:
+    username: admin
+    password: !secret web_password
+
+# GPIO Configuration for WS2812 LED
+# Pin GPIO4 is used for data line (configurable)
+output:
+  - platform: ledc
+    pin: GPIO4
+    frequency: 800kHz
+    id: ws2812_output
+    min_power: 0%
+    max_power: 100%
+
+# Light configuration for WS2812
+light:
+  - platform: addressable_light
+    addressable_light_id: ws2812_light
+    name: "WS2812 LED"
+    effects:
+      - pulse:
+          name: "Pulse"
+          transition_length: 250ms
+          update_interval: 250ms
+      - strobe:
+          name: "Strobe"
+          colors:
+            - red: 100%
+              green: 0%
+              blue: 0%
+              num_leds: 30
+            - red: 0%
+              green: 100%
+              blue: 0%
+              num_leds: 30
+          state_transition_length: 375ms
+          strobe_length: 375ms
+      - rainbow:
+          name: "Rainbow"
+          transition_length: 10ms
+          update_interval: 10ms
+      - scan:
+          name: "Scan"
+          transition_length: 100ms
+          movement_length: 55%
+      - twinkle:
+          name: "Twinkle"
+          transition_length: 45ms
+          progress_interval: 4ms
+
+# NeoPixel strip configuration
+light:
+  - platform: neopixel
+    pin: GPIO4
+    num_leds: 30
+    rgb_order: GRB
+    name: "WS2812 Strip"
+    id: ws2812_light
+    default_transition_length: 500ms
+    color_correct: [50%, 50%, 50%]
+    effects:
+      - pulse:
+          name: "Pulse"
+          transition_length: 250ms
+          update_interval: 250ms
+          min_brightness: 50%
+          max_brightness: 100%
+      - random:
+          name: "Random"
+          transition_length: 5s
+          update_interval: 10s
+      - strobe:
+          name: "Strobe"
+          colors:
+            - red: 100%
+              green: 0%
+              blue: 0%
+            - red: 0%
+              green: 100%
+              blue: 0%
+            - red: 0%
+              green: 0%
+              blue: 100%
+          state_transition_length: 375ms
+          strobe_length: 375ms
+      - rainbow:
+          name: "Rainbow"
+          speed: 10
+          transition_length: 10ms
+          update_interval: 10ms
+      - scan:
+          name: "Scan"
+          speed: 10
+          transition_length: 100ms
+          movement_length: 55%
+      - twinkle:
+          name: "Twinkle"
+          speed: 8
+          transition_length: 45ms
+          progress_interval: 4ms
+
+# Optional: GPIO pins reference
+# GPIO4  - WS2812 Data (default)
+# GPIO23 - Alternative pin
+# GPIO5  - Alternative pin
+# GPIO25 - Alternative pin (PWM capable)
+
+packages:
+  version: !include version.yaml

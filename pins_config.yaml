@@ -1,0 +1,97 @@
+# WS2812 LED 腳位配置參考
+# Pin Configuration Reference for WS2812 LED Controller
+
+# ESP32 GPIO 腳位對應表
+# GPIO Pin Mapping Reference
+
+esp32_gpio_pins:
+  # 常用腳位 (Commonly Used)
+  GPIO0: "Boot button / Strapping pin"
+  GPIO1: "TX pin (serial)"
+  GPIO2: "Flash button / Onboard LED"
+  GPIO3: "RX pin (serial)"
+  GPIO4: "Data pin (推薦用於 WS2812 / Recommended for WS2812)"
+  GPIO5: "替代資料腳位 / Alternative data pin"
+  GPIO12: "Strapping pin"
+  GPIO13: "可用 / Available"
+  GPIO14: "可用 / Available"
+  GPIO15: "Strapping pin"
+  GPIO16: "可用 / Available"
+  GPIO17: "可用 / Available"
+  GPIO18: "可用 / Available"
+  GPIO19: "可用 / Available"
+  GPIO21: "可用 / Available (I2C SDA)"
+  GPIO22: "可用 / Available (I2C SCL)"
+  GPIO23: "替代資料腳位 / Alternative data pin (WS2812)"
+  GPIO25: "可用 / Available (PWM compatible)"
+  GPIO26: "可用 / Available"
+  GPIO27: "可用 / Available"
+  GPIO32: "可用 / Available"
+  GPIO33: "可用 / Available"
+  GPIO34: "Input only"
+  GPIO35: "Input only"
+  GPIO36: "VP (Input only)"
+  GPIO39: "VN (Input only)"
+
+# 推薦配置 (Recommended Configurations)
+
+# 單燈條配置 (Single LED Strip)
+single_strip_config:
+  data_pin: GPIO4
+  ground_pin: GND
+  power_pin: "5V"
+  num_leds: 30
+  color_order: GRB
+
+# 雙燈條配置 (Dual LED Strip)
+dual_strip_config:
+  strip_1:
+    data_pin: GPIO4
+    num_leds: 30
+  strip_2:
+    data_pin: GPIO5
+    num_leds: 30
+
+# 電源考量 (Power Considerations)
+power_requirements:
+  per_led_current: "20-60 mA @ 5V (depending on brightness)"
+  full_white_example:
+    "30_leds_full_brightness": "30 × 60mA = 1.8A"
+    "60_leds_full_brightness": "60 × 60mA = 3.6A"
+  recommended_psu:
+    "30_leds": "5A 5V supply"
+    "60_leds": "10A 5V supply"
+    "100+_leds": "20A+ 5V supply"
+
+# 連接圖 (Wiring Diagram)
+wiring:
+  esp32_5v: "Connect to ESP32 5V or external 5V supply"
+  esp32_gnd: "Connect to GND (both ESP32 and external supply)"
+  led_din: "WS2812 DIN → ESP32 GPIO4"
+  led_5v: "WS2812 5V → 5V supply"
+  led_gnd: "WS2812 GND → GND"
+  capacitor: "Add 100µF capacitor between 5V and GND (near LED strip)"
+  resistor: "Add 470Ω resistor between GPIO4 and WS2812 DIN (optional, recommended)"
+
+# 調試技巧 (Debugging Tips)
+debugging:
+  check_gpio_voltage: "GPIO4 should output ~3.3V logic (WS2812 is 5V tolerant)"
+  current_draw: "Monitor power supply current with multimeter"
+  signal_integrity: "Use short wires (< 50cm) to avoid signal degradation"
+  power_distribution: "Add capacitors at LED strip power entry point"
+  level_shifter: "For long runs (> 1m), consider 3.3V to 5V level shifter"
+
+# 替代腳位配置示例 (Alternative Pin Configuration Example)
+alternative_config_example:
+  # 如果 GPIO4 被佔用，使用 GPIO23
+  # If GPIO4 is occupied, use GPIO23 instead
+  data_pin: GPIO23
+  num_leds: 30
+  config_line: "pin: GPIO23"
+
+# LED 燈條類型 (LED Strip Types)
+supported_led_types:
+  WS2812: "常用 NeoPixel / Common NeoPixel"
+  WS2812B: "改進版本 / Improved version"
+  SK6812: "RGB+White 版本 / RGBW variant"
+  APA102: "Serial interface (different from WS2812)"
