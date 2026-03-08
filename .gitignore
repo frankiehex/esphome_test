@@ -1,0 +1,37 @@
+# Python environments
+esphome_env/
+venv/
+env/
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# ESPHome build artifacts
+.esphome/
+build/
+*.bin
+*.elf
+
+# IDE and Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Secrets and sensitive files
+secrets.yaml
+*.env
+*.key
+*.pem
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
