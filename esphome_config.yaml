@@ -22,7 +22,7 @@ wifi:
 
 # Enable logging
 logger:
-  level: INFO
+  level: DEBUG
   logs:
     component: DEBUG
 
@@ -33,6 +33,7 @@ api:
 
 # Over-the-Air Updates
 ota:
+  platform: esphome
   password: !secret ota_password
 
 # Web Server for control interface
@@ -44,13 +45,13 @@ web_server:
 
 # NeoPixel strip configuration for WS2812 LED
 light:
-  - platform: neopixel
+  - platform: fastled_clockless
+    chipset: WS2812B
     pin: GPIO4
     num_leds: 30
     rgb_order: GRB
     name: "WS2812 LED Strip"
     default_transition_length: 500ms
-    color_correct: [50%, 50%, 50%]
     effects:
       - pulse:
           name: "Pulse"
@@ -63,40 +64,15 @@ light:
           transition_length: 5s
           update_interval: 10s
       - strobe:
-          name: "Strobe - Multi Color"
+          name: "Strobe"
           colors:
-            - red: 100%
+            - state: true
+              red: 100%
               green: 0%
               blue: 0%
-            - red: 0%
-              green: 100%
-              blue: 0%
-            - red: 0%
-              green: 0%
-              blue: 100%
-            - red: 100%
-              green: 100%
-              blue: 0%
-          state_transition_length: 300ms
-          strobe_length: 300ms
-      - rainbow:
-          name: "Rainbow"
-          speed: 10
-          transition_length: 10ms
-          update_interval: 10ms
-      - scan:
-          name: "Scan"
-          speed: 10
-          transition_length: 100ms
-          movement_length: 55%
-      - twinkle:
-          name: "Twinkle"
-          speed: 8
-          transition_length: 45ms
-          progress_interval: 4ms
-      - fireworks:
-          name: "Fireworks"
-          update_interval: 32ms
+              duration: 300ms
+            - state: false
+              duration: 300ms
 
 # GPIO Configuration Reference
 # GPIO4  - WS2812 Data (default) - Recommended for stability

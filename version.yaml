@@ -17,22 +17,21 @@ text_sensor:
     name: "Firmware Version"
     id: firmware_version_sensor
     lambda: |-
-      return "1.0.0";
+      return std::string("1.0.0");
     update_interval: never
 
   - platform: template
     name: "Build Date"
     id: build_date_sensor
     lambda: |-
-      return "2026-03-08";
+      return std::string("2026-03-08");
     update_interval: never
 
   - platform: template
     name: "Device Info"
     id: device_info_sensor
     lambda: |-
-      std::string info = "WS2812 LED Effects v1.0.0";
-      return info;
+      return std::string("WS2812 LED Effects v1.0.0");
     update_interval: never
 
 # Sensor for API version tracking
@@ -41,6 +40,6 @@ sensor:
     name: "API Version"
     id: api_version
     lambda: |-
-      return 100;  # v1.0.0
+      return 100;
     unit_of_measurement: ""
     update_interval: never
