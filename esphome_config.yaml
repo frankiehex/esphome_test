@@ -7,7 +7,7 @@ esphome:
     priority: 600
     then:
       - logger.log:
-          format: "WS2812 LED Effects v1.0.0 started - System ready"
+          format: "WS2812 LED Effects v1.0.1 started - System ready"
           level: INFO
 
 # WiFi configuration
@@ -18,7 +18,7 @@ wifi:
   power_save_mode: light
   ap:
     ssid: "ws2812-fallback"
-    password: !secret ap_password
+    password: "12345678"
 
 # Enable logging
 logger:
@@ -43,14 +43,12 @@ web_server:
     password: !secret web_password
 
 # NeoPixel strip configuration for WS2812 LED
-# GPIO4 is used for data line (directly driven by neopixel platform)
 light:
   - platform: neopixel
     pin: GPIO4
     num_leds: 30
     rgb_order: GRB
     name: "WS2812 LED Strip"
-    id: ws2812_light
     default_transition_length: 500ms
     color_correct: [50%, 50%, 50%]
     effects:
@@ -65,7 +63,7 @@ light:
           transition_length: 5s
           update_interval: 10s
       - strobe:
-          name: "Strobe"
+          name: "Strobe - Multi Color"
           colors:
             - red: 100%
               green: 0%
@@ -100,12 +98,17 @@ light:
           name: "Fireworks"
           update_interval: 32ms
 
-# GPIO Configuration Notes
+# GPIO Configuration Reference
 # GPIO4  - WS2812 Data (default) - Recommended for stability
-# GPIO23 - Alternative pin (with level shifter recommended)
-# GPIO5  - Alternative pin (with level shifter recommended)
+# GPIO23 - Alternative pin (with level shifter recommended for 3.3V)
+# GPIO5  - Alternative pin (with level shifter recommended for 3.3V)
 # GPIO25 - Alternative pin (PWM capable, with level shifter recommended)
-# Note: Use 3.3V to 5V level shifter for reliable communication
+#
+# Recommendations:
+# - Use 3.3V to 5V level shifter for reliable 5V WS2812 communication
+# - Ensure proper power supply (5V 1-2A minimum for 30 LEDs)
+# - Add 100-470µF capacitor across 5V and GND near LED strip
+# - Add 1K resistor in series with data line for protection
 
 packages:
   version: !include version.yaml
