@@ -3,22 +3,22 @@ esphome:
   platform: ESP32
   board: esp32dev
   min_version: 2024.1.0
-  # Version number for tracking
   on_boot:
     priority: 600
     then:
       - logger.log:
-          format: "WS2812 LED Effects v%s started"
-          args: ["1.0.0"]
+          format: "WS2812 LED Effects v1.0.0 started - System ready"
+          level: INFO
 
 # WiFi configuration
 wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
   fast_connect: true
+  power_save_mode: light
   ap:
     ssid: "ws2812-fallback"
-    password: "12345678"
+    password: !secret ap_password
 
 # Enable logging
 logger:
@@ -42,17 +42,8 @@ web_server:
     username: admin
     password: !secret web_password
 
-# GPIO Configuration for WS2812 LED
-# Pin GPIO4 is used for data line (configurable)
-output:
-  - platform: ledc
-    pin: GPIO4
-    frequency: 800kHz
-    id: ws2812_output
-    min_power: 0%
-    max_power: 100%
-
 # NeoPixel strip configuration for WS2812 LED
+# GPIO4 is used for data line (directly driven by neopixel platform)
 light:
   - platform: neopixel
     pin: GPIO4
@@ -85,8 +76,11 @@ light:
             - red: 0%
               green: 0%
               blue: 100%
-          state_transition_length: 375ms
-          strobe_length: 375ms
+            - red: 100%
+              green: 100%
+              blue: 0%
+          state_transition_length: 300ms
+          strobe_length: 300ms
       - rainbow:
           name: "Rainbow"
           speed: 10
@@ -102,12 +96,16 @@ light:
           speed: 8
           transition_length: 45ms
           progress_interval: 4ms
+      - fireworks:
+          name: "Fireworks"
+          update_interval: 32ms
 
-# Optional: GPIO pins reference
-# GPIO4  - WS2812 Data (default)
-# GPIO23 - Alternative pin
-# GPIO5  - Alternative pin
-# GPIO25 - Alternative pin (PWM capable)
+# GPIO Configuration Notes
+# GPIO4  - WS2812 Data (default) - Recommended for stability
+# GPIO23 - Alternative pin (with level shifter recommended)
+# GPIO5  - Alternative pin (with level shifter recommended)
+# GPIO25 - Alternative pin (PWM capable, with level shifter recommended)
+# Note: Use 3.3V to 5V level shifter for reliable communication
 
 packages:
   version: !include version.yaml
